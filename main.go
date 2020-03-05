@@ -1,11 +1,7 @@
 package main
 
-import (
-	"github.com/zu1k/she/hub"
-	"github.com/zu1k/she/source"
-)
+import "github.com/zu1k/she/cmd"
 
 func main() {
-	source.InitSourceList()
-	hub.Start()
+	cmd.She()
 }

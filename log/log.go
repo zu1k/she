@@ -8,7 +8,6 @@ import (
 )
 
 var (
-	logCh = make(chan interface{})
 	level = INFO
 )
 
@@ -33,19 +32,16 @@ func Infoln(format string, v ...interface{}) {
 
 func Warnln(format string, v ...interface{}) {
 	event := newLog(WARNING, format, v...)
-	logCh <- event
 	print(event)
 }
 
 func Errorln(format string, v ...interface{}) {
 	event := newLog(ERROR, format, v...)
-	logCh <- event
 	print(event)
 }
 
 func Debugln(format string, v ...interface{}) {
 	event := newLog(DEBUG, format, v...)
-	logCh <- event
 	print(event)
 }
 

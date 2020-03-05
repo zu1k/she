@@ -3,6 +3,7 @@ package source
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mssql" // for sql server
@@ -19,6 +20,14 @@ func init() {
 
 func newQQGroup(info interface{}) Source {
 	link := info.(string)
+	if !strings.Contains(link, "dial+timeout=") {
+		if strings.Contains(link, "?") {
+			link += "&dial+timeout=5"
+		} else {
+			link += "?dial+timeout=5"
+		}
+	}
+	fmt.Println(link)
 	db, err := gorm.Open("mssql", link)
 	if err != nil {
 		log.Errorln("QQGroup db connect err")

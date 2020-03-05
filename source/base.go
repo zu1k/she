@@ -18,7 +18,6 @@ type Source interface {
 }
 
 func register(name string, c creator) {
-	log.Infoln("Source template init: %s", name)
 	creatorMap[name] = c
 }
 
@@ -26,6 +25,7 @@ func register(name string, c creator) {
 func NewSource(name string, info interface{}) Source {
 	c, ok := creatorMap[strings.ToLower(name)]
 	if ok {
+		log.Infoln("Init %s source...", name)
 		return c(info)
 	}
 	log.Errorln("Source type not found: %s", name)
