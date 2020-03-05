@@ -7,6 +7,7 @@ import (
 
 var sourseList = make([]Source, 0)
 
+// InitSourceList 初始化搜索资源的列表
 func InitSourceList() {
 	sourseList = append(sourseList, NewSource("qqgroup", "sqlserver://she:she@192.168.254.145:1433?database=QQGroup"))
 	sourseList = append(sourseList, NewSource("plaintext", "./ku/12306/account.csv"))

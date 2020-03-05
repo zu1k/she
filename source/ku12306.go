@@ -24,12 +24,12 @@ func newKu12306(info interface{}) Source {
 	return &ku12306{db: db}
 }
 
-// GetName return qqgroup name
+// GetName return 12306 name
 func (k *ku12306) GetName() string {
 	return "Ku12306"
 }
 
-// Search return result slice from source QQGroup
+// Search return result slice from source 12306
 func (k *ku12306) Search(key interface{}) (results []Result) {
 	num := key.(int)
 	log.Infoln("Search Ku12306, key = %d", num)
