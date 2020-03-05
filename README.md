@@ -11,7 +11,7 @@
   <a href="https://goreportcard.com/report/github.com/zu1k/she">
     <img src="https://goreportcard.com/badge/github.com/zu1k/she?style=flat-square">
   </a>
-  <a href="https://github.com/zh1k/she/releases">
+  <a href="https://github.com/zu1k/she/releases">
     <img src="https://img.shields.io/github/release/zu1k/she/all.svg?style=flat-square">
   </a>
 </p>
