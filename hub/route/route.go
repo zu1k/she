@@ -12,6 +12,7 @@ var (
 	serverAddr = ""
 )
 
+// Start 启动 web api
 func Start(addr string, secret string) {
 	if serverAddr != "" {
 		return

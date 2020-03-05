@@ -6,7 +6,8 @@ import (
 )
 
 func TestQQGroupSearch(t *testing.T) {
-	qq := newQQGroup()
+	link := "sqlserver://she:she@192.168.254.145:1433?database=QQGroup"
+	qq := newQQGroup(link)
 	if qq != nil {
 		res := qq.Search(11348929)
 		fmt.Printf("QQGroup search 11348929 result: length %d\n", len(res))

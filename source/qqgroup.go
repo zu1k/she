@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mssql"
+	_ "github.com/jinzhu/gorm/dialects/mssql" // for sql server
 	"github.com/zu1k/she/log"
 )
 
@@ -17,8 +17,9 @@ func init() {
 	register("qqgroup", newQQGroup)
 }
 
-func newQQGroup() Source {
-	db, err := gorm.Open("mssql", "sqlserver://she:she@192.168.254.145:1433?database=QQGroup")
+func newQQGroup(info interface{}) Source {
+	link := info.(string)
+	db, err := gorm.Open("mssql", link)
 	if err != nil {
 		log.Errorln("QQGroup db connect err")
 		return nil
@@ -26,10 +27,12 @@ func newQQGroup() Source {
 	return &qqGroup{db: db}
 }
 
+// GetName return qqgroup name
 func (q qqGroup) GetName() string {
 	return "QQGroup"
 }
 
+// Search return result slice from source QQGroup
 func (q *qqGroup) Search(key interface{}) (results []Result) {
 	num := key.(int)
 	log.Infoln("Search QQGroup, key = %d", num)

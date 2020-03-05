@@ -8,7 +8,7 @@ import (
 var sourseList = make([]Source, 0)
 
 func InitSourceList() {
-	sourseList = append(sourseList, NewSource("qqgroup"))
+	sourseList = append(sourseList, NewSource("qqgroup", "sqlserver://she:she@192.168.254.145:1433?database=QQGroup"))
 }
 
 // Search search all data source

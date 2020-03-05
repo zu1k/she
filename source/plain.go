@@ -1,31 +1,22 @@
 package source
 
-import (
-	"log"
-
-	"github.com/jinzhu/gorm"
-)
-
 type plaintext struct {
-	db *gorm.DB
 }
 
 func init() {
 	register("plaintext", newPlain)
 }
 
+// GetName return plaintext name
 func (p *plaintext) GetName() string {
 	return "Plain"
 }
 
+// Search return result slice from source plaintext
 func (p *plaintext) Search(key interface{}) (result []Result) {
 	return nil
 }
 
-func newPlain() Source {
-	db, err := gorm.Open("mssql", "sqlserver://username:password@localhost:1433?database=dbname")
-	if err != nil {
-		log.Println("")
-	}
-	return &plaintext{db: db}
+func newPlain(info interface{}) Source {
+	return &plaintext{}
 }

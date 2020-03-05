@@ -6,7 +6,7 @@ import (
 	"github.com/zu1k/she/log"
 )
 
-type creator func() Source
+type creator func(info interface{}) Source
 
 var (
 	creatorMap = make(map[string]creator)
@@ -23,10 +23,10 @@ func register(name string, c creator) {
 }
 
 // NewSource create an Source object by name and return as an Source interface
-func NewSource(name string) Source {
+func NewSource(name string, info interface{}) Source {
 	c, ok := creatorMap[strings.ToLower(name)]
 	if ok {
-		return c()
+		return c(info)
 	}
 	log.Errorln("Source type not found: %s", name)
 	return nil
