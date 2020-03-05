@@ -28,7 +28,7 @@ func newQQGroup(info interface{}) Source {
 }
 
 // GetName return qqgroup name
-func (q qqGroup) GetName() string {
+func (q *qqGroup) GetName() string {
 	return "QQGroup"
 }
 

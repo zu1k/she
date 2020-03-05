@@ -20,3 +20,6 @@ vendor
 
 # macOS file
 .DS_Store
+
+# ku
+ku/*
