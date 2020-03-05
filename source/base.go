@@ -1,6 +1,10 @@
 package source
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/zu1k/she/log"
+)
 
 type creator func() Source
 
@@ -14,6 +18,7 @@ type Source interface {
 }
 
 func register(name string, c creator) {
+	log.Infoln("Source Init: %s", name)
 	creatorMap[name] = c
 }
 
@@ -23,6 +28,7 @@ func NewSource(name string) Source {
 	if ok {
 		return c()
 	}
+	log.Errorln("Source type not found: %s", name)
 	return nil
 }
 

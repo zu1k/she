@@ -1,11 +1,12 @@
 package source
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mssql"
+	"github.com/zu1k/she/log"
 )
 
 type qqGroup struct {
@@ -17,19 +18,25 @@ func init() {
 }
 
 func newQQGroup() Source {
-	db, err := gorm.Open("mssql", "sqlserver://username:password@localhost:1433?database=dbname")
+	db, err := gorm.Open("mssql", "sqlserver://she:she@192.168.254.145:1433?database=QQGroup")
 	if err != nil {
-		log.Println("")
+		log.Errorln("QQGroup db connect err")
+		return nil
 	}
 	return &qqGroup{db: db}
 }
 
-func (q *qqGroup) GetName() string {
+func (q qqGroup) GetName() string {
 	return "QQGroup"
 }
 
-func (q *qqGroup) Search(key interface{}) (result []Result) {
-	return nil
+func (q *qqGroup) Search(key interface{}) (results []Result) {
+	num := key.(int)
+	log.Infoln("Search QQGroup, key = %d", num)
+	results = append(results, q.searchMemberByQQNum(num)...)
+	results = append(results, q.searchMemberByGroupNum(num)...)
+	results = append(results, q.searchGroupByGroupNum(num)...)
+	return
 }
 
 type group struct {
@@ -44,6 +51,11 @@ type group struct {
 
 func (group) TableName() string {
 	return "Group"
+}
+
+func (g group) String() string {
+	return fmt.Sprintf("Group\t Id: %d, GroupNum: %d, Mast: %d, Title: %s, Class: %s, CreateDate: %s, Summary: %s",
+		g.Id, g.GroupNum, g.Mast, g.Title, g.Class, g.CreateDate, g.Summary)
 }
 
 type member struct {
@@ -61,7 +73,8 @@ func (member) TableName() string {
 }
 
 func (m member) String() string {
-	return m.Nick
+	return fmt.Sprintf("Member\t Id: %d, QQNum: %d, Nick: %s, Age: %s, Gender: %d, Auth: %d, GroupNum: %d",
+		m.Id, m.QQNum, m.Nick, m.Age, m.Gender, m.Auth, m.GroupNum)
 }
 
 func (q *qqGroup) searchMemberByQQNum(qqNum int) (results []Result) {
@@ -78,10 +91,30 @@ func (q *qqGroup) searchMemberByQQNum(qqNum int) (results []Result) {
 	return
 }
 
-func (q *qqGroup) searchMemberByGroupNum(groupNum int) {
-
+func (q *qqGroup) searchMemberByGroupNum(groupNum int) (results []Result) {
+	var memberRes []member
+	q.db.Where("GroupNum=?", groupNum).Find(&memberRes)
+	for _, m := range memberRes {
+		result := Result{
+			Score: 1,
+			Hit:   strconv.Itoa(groupNum),
+			Text:  m.String(),
+		}
+		results = append(results, result)
+	}
+	return
 }
 
-func (q *qqGroup) searchGroupByGroupNum(groupNum int) {
-
+func (q *qqGroup) searchGroupByGroupNum(groupNum int) (results []Result) {
+	var groupRes []group
+	q.db.Where("GroupNum=?", groupNum).Find(&groupRes)
+	for _, m := range groupRes {
+		result := Result{
+			Score: 1,
+			Hit:   strconv.Itoa(groupNum),
+			Text:  m.String(),
+		}
+		results = append(results, result)
+	}
+	return
 }
