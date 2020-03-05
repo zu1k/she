@@ -3,8 +3,9 @@ package source
 import (
 	"bufio"
 	"bytes"
-	"log"
 	"os"
+
+	"github.com/zu1k/she/log"
 )
 
 type plaintext struct {
@@ -23,6 +24,7 @@ func (p *plaintext) GetName() string {
 // Search return result slice from source plaintext
 func (p *plaintext) Search(key interface{}) (result []Result) {
 	str := key.(string)
+	log.Infoln("Search 12306, key = %s", str)
 	return searchFileContainsStr(p.filePath, str)
 }
 
@@ -48,7 +50,6 @@ func searchFileContainsStr(path, str string) (results []Result) {
 	for input.Scan() {
 		info := input.Bytes()
 		if bytes.Contains(info, cmp) {
-			log.Println(string(info))
 			results = append(results, Result{
 				Score: 1,
 				Hit:   str,
