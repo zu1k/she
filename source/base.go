@@ -18,7 +18,7 @@ type Source interface {
 }
 
 func register(name string, c creator) {
-	log.Infoln("Source Init: %s", name)
+	log.Infoln("Source template init: %s", name)
 	creatorMap[name] = c
 }
 
