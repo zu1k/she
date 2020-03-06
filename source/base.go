@@ -33,7 +33,7 @@ func NewSource(name string, info interface{}) Source {
 }
 
 type Result struct {
-	Score int
-	Hit   string
-	Text  string
+	Score int    `json:"score"`
+	Hit   string `json:"hit"`
+	Text  string `json:"text"`
 }

@@ -24,6 +24,7 @@ func Start(addr string, secret string) {
 	r.GET("/", hello)
 	r.GET("/version", version)
 	r.GET("/search", search)
+	r.StaticFS("/ui", http.Dir("./dist"))
 
 	err := r.Run(serverAddr)
 	if err != nil {
@@ -33,11 +34,7 @@ func Start(addr string, secret string) {
 }
 
 func hello(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"app":       C.Name,
-		"version":   C.Version,
-		"buildtime": C.BuildTime,
-	})
+	c.Redirect(http.StatusFound, "/ui/")
 }
 
 func version(c *gin.Context) {
