@@ -14,10 +14,10 @@ var (
 
 type Source interface {
 	GetName() string
-	Search(key interface{}) (result []Result)
+	Search(key interface{}) (results []Result)
 }
 
-func register(name string, c creator) {
+func Register(name string, c creator) {
 	creatorMap[name] = c
 }
 
