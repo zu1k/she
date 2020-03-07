@@ -101,9 +101,10 @@ func (q *qqGroup) searchMemberByQQNum(qqNum int, resChan chan common.Result, don
 	q.db.Where("QQNum=?", qqNum).Find(&memberRes)
 	for _, m := range memberRes {
 		result := common.Result{
-			Score: 1,
-			Hit:   strconv.Itoa(qqNum),
-			Text:  m.String(),
+			Source: "QQGroup",
+			Score:  1,
+			Hit:    strconv.Itoa(qqNum),
+			Text:   m.String(),
 		}
 		resChan <- result
 	}
@@ -115,9 +116,10 @@ func (q *qqGroup) searchMemberByGroupNum(groupNum int, resChan chan common.Resul
 	q.db.Where("GroupNum=?", groupNum).Find(&memberRes)
 	for _, m := range memberRes {
 		result := common.Result{
-			Score: 1,
-			Hit:   strconv.Itoa(groupNum),
-			Text:  m.String(),
+			Source: "QQGroup",
+			Score:  1,
+			Hit:    strconv.Itoa(groupNum),
+			Text:   m.String(),
 		}
 		resChan <- result
 	}
@@ -129,9 +131,10 @@ func (q *qqGroup) searchGroupByGroupNum(groupNum int, resChan chan common.Result
 	q.db.Where("GroupNum=?", groupNum).Find(&groupRes)
 	for _, m := range groupRes {
 		result := common.Result{
-			Score: 1,
-			Hit:   strconv.Itoa(groupNum),
-			Text:  m.String(),
+			Source: "QQGroup",
+			Score:  1,
+			Hit:    strconv.Itoa(groupNum),
+			Text:   m.String(),
 		}
 		resChan <- result
 	}

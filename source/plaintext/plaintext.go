@@ -35,15 +35,17 @@ func (p *plaintext) Search(key interface{}, resChan chan common.Result, wg *sync
 		wg.Done()
 		return
 	}
+	sourceName := f.Name()
 	defer f.Close()
 	input := bufio.NewScanner(f)
 	for input.Scan() {
 		info := input.Bytes()
 		if bytes.Contains(info, cmp) {
 			result := common.Result{
-				Score: 1,
-				Hit:   str,
-				Text:  string(info),
+				Source: sourceName,
+				Score:  1,
+				Hit:    str,
+				Text:   string(info),
 			}
 			resChan <- result
 		}
