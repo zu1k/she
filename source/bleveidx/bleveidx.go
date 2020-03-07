@@ -2,7 +2,9 @@ package bleveidx
 
 import (
 	"fmt"
+	"sync"
 
+	"github.com/zu1k/she/common"
 	"github.com/zu1k/she/source"
 
 	"github.com/blevesearch/bleve"
@@ -33,7 +35,7 @@ func (b *bleveidx) GetName() string {
 }
 
 // Search return result slice from source bleveidx
-func (b *bleveidx) Search(key interface{}) (results []source.Result) {
+func (b *bleveidx) Search(key interface{}, resChan chan common.Result, wg *sync.WaitGroup) {
 	str := key.(string)
 	log.Infoln("Search BleveIdx, key = %s", key)
 	query := bleve.NewMatchQuery(str)
@@ -47,5 +49,5 @@ func (b *bleveidx) Search(key interface{}) (results []source.Result) {
 	for _, i := range hits {
 		fmt.Println(i.Index)
 	}
-	return
+	wg.Done()
 }

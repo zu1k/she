@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 
+	"github.com/zu1k/she/common"
 	"github.com/zu1k/she/source"
 
 	"github.com/jinzhu/gorm"
@@ -44,13 +46,16 @@ func (q *qqGroup) GetName() string {
 }
 
 // Search return result slice from source QQGroup
-func (q *qqGroup) Search(key interface{}) (results []source.Result) {
+func (q *qqGroup) Search(key interface{}, resChan chan common.Result, wg *sync.WaitGroup) {
 	num := key.(int)
 	log.Infoln("Search QQGroup, key = %d", num)
-	results = append(results, q.searchMemberByQQNum(num)...)
-	results = append(results, q.searchMemberByGroupNum(num)...)
-	results = append(results, q.searchGroupByGroupNum(num)...)
-	return
+	done := &sync.WaitGroup{}
+	done.Add(3)
+	go q.searchGroupByGroupNum(num, resChan, done)
+	go q.searchMemberByGroupNum(num, resChan, done)
+	go q.searchMemberByQQNum(num, resChan, done)
+	done.Wait()
+	wg.Done()
 }
 
 type group struct {
@@ -91,44 +96,44 @@ func (m member) String() string {
 		m.Id, m.QQNum, m.Nick, m.Age, m.Gender, m.Auth, m.GroupNum)
 }
 
-func (q *qqGroup) searchMemberByQQNum(qqNum int) (results []source.Result) {
+func (q *qqGroup) searchMemberByQQNum(qqNum int, resChan chan common.Result, done *sync.WaitGroup) {
 	var memberRes []member
 	q.db.Where("QQNum=?", qqNum).Find(&memberRes)
 	for _, m := range memberRes {
-		result := source.Result{
+		result := common.Result{
 			Score: 1,
 			Hit:   strconv.Itoa(qqNum),
 			Text:  m.String(),
 		}
-		results = append(results, result)
+		resChan <- result
 	}
-	return
+	done.Done()
 }
 
-func (q *qqGroup) searchMemberByGroupNum(groupNum int) (results []source.Result) {
+func (q *qqGroup) searchMemberByGroupNum(groupNum int, resChan chan common.Result, done *sync.WaitGroup) {
 	var memberRes []member
 	q.db.Where("GroupNum=?", groupNum).Find(&memberRes)
 	for _, m := range memberRes {
-		result := source.Result{
+		result := common.Result{
 			Score: 1,
 			Hit:   strconv.Itoa(groupNum),
 			Text:  m.String(),
 		}
-		results = append(results, result)
+		resChan <- result
 	}
-	return
+	done.Done()
 }
 
-func (q *qqGroup) searchGroupByGroupNum(groupNum int) (results []source.Result) {
+func (q *qqGroup) searchGroupByGroupNum(groupNum int, resChan chan common.Result, done *sync.WaitGroup) {
 	var groupRes []group
 	q.db.Where("GroupNum=?", groupNum).Find(&groupRes)
 	for _, m := range groupRes {
-		result := source.Result{
+		result := common.Result{
 			Score: 1,
 			Hit:   strconv.Itoa(groupNum),
 			Text:  m.String(),
 		}
-		results = append(results, result)
+		resChan <- result
 	}
-	return
+	done.Done()
 }

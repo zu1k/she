@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/zu1k/she/processor"
+
 	"github.com/zu1k/she/hub"
 	"github.com/zu1k/she/log"
-	"github.com/zu1k/she/source"
 )
 
 const help = `usage: she <command> [<args>]
@@ -29,7 +30,7 @@ func She() {
 	switch subCommand {
 	case "run":
 		log.Infoln("Init source list...")
-		source.InitSourceList()
+		processor.InitSourceList()
 		log.Infoln("Success init source list")
 		hub.Start()
 	default:

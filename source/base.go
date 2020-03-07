@@ -2,7 +2,9 @@ package source
 
 import (
 	"strings"
+	"sync"
 
+	"github.com/zu1k/she/common"
 	"github.com/zu1k/she/log"
 )
 
@@ -14,7 +16,7 @@ var (
 
 type Source interface {
 	GetName() string
-	Search(key interface{}) (results []Result)
+	Search(key interface{}, resChan chan common.Result, wg *sync.WaitGroup)
 }
 
 func Register(name string, c creator) {
@@ -30,10 +32,4 @@ func NewSource(name string, info interface{}) Source {
 	}
 	log.Errorln("Source type not found: %s", name)
 	return nil
-}
-
-type Result struct {
-	Score int    `json:"score"`
-	Hit   string `json:"hit"`
-	Text  string `json:"text"`
 }

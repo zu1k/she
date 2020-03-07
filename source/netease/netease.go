@@ -1,6 +1,11 @@
 package netease
 
-import "github.com/zu1k/she/source"
+import (
+	"sync"
+
+	"github.com/zu1k/she/common"
+	"github.com/zu1k/she/source"
+)
 
 type netease struct {
 }
@@ -15,8 +20,8 @@ func (n *netease) GetName() string {
 }
 
 // Search return result slice from source 126/163
-func (n *netease) Search(key interface{}) (result []source.Result) {
-	return nil
+func (n *netease) Search(key interface{}, resChan chan common.Result, wg *sync.WaitGroup) {
+	wg.Done()
 }
 
 func newNetease(info interface{}) source.Source {
