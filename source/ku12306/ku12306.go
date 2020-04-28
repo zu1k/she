@@ -33,6 +33,18 @@ func (k *ku12306) GetName() string {
 	return "Ku12306"
 }
 
+type account struct {
+	Id        int
+	PhoneNum  string
+	Username  string
+	Password  string
+	RealNmae  string
+	IdCardNum string
+	Email     string
+	Question  string
+	Answer    string
+}
+
 // Search return result slice from source 12306
 func (k *ku12306) Search(key interface{}, resChan chan common.Result, wg *sync.WaitGroup) {
 	num := key.(int)
