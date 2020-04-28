@@ -15,21 +15,19 @@ var sourceList = make([]source.Source, 0)
 // InitSourceList 初始化搜索资源的列表
 func InitSourceList() {
 	//sourceList = append(sourceList, source.NewSource("qqgroup", "sqlserver://she:she@192.168.254.145:1433?database=QQGroup"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "./ku/12306/account.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/1-200W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/200W-400W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/400W-600W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/600W-800W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/800W-1000W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/1000W-1200W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/1200W-1400W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/1400W-1600W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/1600W-1800W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/1800W-2000W.csv"))
-	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/最后5000.csv"))
+	sourceList = append(sourceList, source.NewSource("plaintext", "./ku/12306/account.csv"))
 
 	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1-200W.csv"))
-	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1000W-1200W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\200-400W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\400-600W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\600-800W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\800-1000W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1000-1200W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1200-1400W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1400-1600W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1600-1800W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1800-2000W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\最后5000.csv"))
 
 }
 

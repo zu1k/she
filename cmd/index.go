@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/zu1k/she/source/jiudian2000w"
+	"github.com/zu1k/she/index/jiudian2000w"
 
 	"github.com/spf13/cobra"
 )
