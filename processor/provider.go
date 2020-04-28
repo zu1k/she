@@ -28,7 +28,8 @@ func InitSourceList() {
 	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/1800W-2000W.csv"))
 	//sourceList = append(sourceList, source.NewSource("plaintext", "ku/2000W/最后5000.csv"))
 
-	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\test3"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1-200W.csv"))
+	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1000W-1200W.csv"))
 
 }
 

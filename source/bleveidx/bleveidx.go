@@ -16,7 +16,7 @@ type Bleveidx struct {
 }
 
 func init() {
-	source.Register("Bleveidx", OpenBleveIdx)
+	source.Register("bleveidx", OpenBleveIdx)
 }
 
 func OpenBleveIdx(info interface{}) source.Source {
@@ -48,7 +48,13 @@ func (b *Bleveidx) Search(key interface{}, resChan chan common.Result, wg *sync.
 	//TODO 查找到索引后找真实数据
 	hits := searchResults.Hits
 	for _, i := range hits {
-		fmt.Println(i.Fields)
+		result := common.Result{
+			Source: b.GetName(),
+			Score:  1,
+			Hit:    str,
+			Text:   fmt.Sprintln(i.Fields),
+		}
+		resChan <- result
 	}
 	wg.Done()
 }
