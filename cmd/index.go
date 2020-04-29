@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/zu1k/she/index/bleveindex"
+
 	"github.com/zu1k/she/index/jiudian2000w"
 
 	"github.com/spf13/cobra"
@@ -22,7 +24,12 @@ var (
 			}
 			filePath := args[0]
 			switch *indexEngineType {
-			case "bleve":
+			case "bleveindex":
+				if info := *infoFilePath; info == "" {
+					fmt.Println("specific info file path")
+				} else {
+					bleveindex.ParseAndIndex(filePath, info)
+				}
 				return
 			case "jiudian2000w":
 				jiudian2000w.ParseAndIndex(filePath)
@@ -30,10 +37,12 @@ var (
 		},
 	}
 	indexEngineType *string
+	infoFilePath    *string
 )
 
 func init() {
 	rootCmd.AddCommand(indexCmd)
 
-	indexEngineType = indexCmd.Flags().StringP("type", "t", "bleve", "which index engine to use")
+	indexEngineType = indexCmd.Flags().StringP("type", "t", "bleveindex", "which index engine to use")
+	infoFilePath = indexCmd.Flags().StringP("info", "i", "", "info file to use")
 }

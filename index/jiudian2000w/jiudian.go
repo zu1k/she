@@ -1,75 +1,30 @@
 package jiudian2000w
 
 import (
-	"bytes"
-	"encoding/csv"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path"
 	"runtime"
 	"strings"
 	"time"
 
+	"github.com/zu1k/she/source/bleveidx"
+
+	"github.com/zu1k/she/index/tools"
+
 	"github.com/cheggaaa/pb/v3"
 
 	"github.com/blevesearch/bleve"
-	"github.com/zu1k/she/source/bleveidx"
 )
 
-func openCSC(filepath string) (csvReader *csv.Reader, err error) {
-	cntb, err := ioutil.ReadFile(filepath)
-	if err != nil {
-		return
-	}
-	csvReader = csv.NewReader(strings.NewReader(string(cntb)))
-	return
-}
-
-func lineCounter(filepath string) (int, error) {
-	r, err := os.Open(filepath)
-	if err != nil {
-		return 0, err
-	}
-	var readSize int
-	var count int
-
-	buf := make([]byte, 1024)
-
-	for {
-		readSize, err = r.Read(buf)
-		if err != nil {
-			break
-		}
-
-		var buffPosition int
-		for {
-			i := bytes.IndexByte(buf[buffPosition:], '\n')
-			if i == -1 || readSize == buffPosition {
-				break
-			}
-			buffPosition += i + 1
-			count++
-		}
-	}
-	if readSize > 0 && count == 0 || count > 0 {
-		count++
-	}
-	if err == io.EOF {
-		return count, nil
-	}
-
-	return count, err
-}
-
 func ParseAndIndex(filepath string) {
-	reader, err := openCSC(filepath)
+	reader, err := tools.OpenCSC(filepath)
 	if err != nil {
 		panic(err)
 	}
 
-	lineNum, err := lineCounter(filepath)
+	lineNum, err := tools.LineCounter(filepath)
 	if err != nil {
 		panic(err)
 	}
@@ -83,7 +38,7 @@ func ParseAndIndex(filepath string) {
 
 	storePath := "D:\\sheku\\" + fileName
 	os.RemoveAll(storePath)
-	indexer, err := newBleveIdx(storePath)
+	indexer, err := bleveidx.NewBleveIndex(storePath, 2)
 	if err != nil {
 		panic(err)
 	}
@@ -109,14 +64,6 @@ func ParseAndIndex(filepath string) {
 	}()
 
 	indexProcessor(indexer, infoChan, lineNum)
-}
-
-func newBleveIdx(kufilepath string) (index bleve.Index, err error) {
-	index, err = bleveidx.NewBleveIndex(kufilepath, 2)
-	if err != nil {
-		panic(err)
-	}
-	return
 }
 
 func indexProcessor(index bleve.Index, infoChan chan People, lineCount int) {

@@ -2,8 +2,9 @@ package bleveidx
 
 import (
 	"fmt"
-	"github.com/blevesearch/bleve/index/scorch"
 	"testing"
+
+	"github.com/blevesearch/bleve/index/scorch"
 
 	"github.com/blevesearch/bleve"
 )
@@ -28,18 +29,18 @@ func TestBleveTest(t *testing.T) {
 	}{
 		Id:   "example",
 		From: "marty.schoch@gmail.com",
-		Body: "bleve indexing is easy",
+		Body: "bleveindex indexing is easy",
 	}
 
 	bleve.Config.DefaultIndexType = scorch.Name
 	mapping := bleve.NewIndexMapping()
-	index, err := bleve.New("../../ku/bleve/test4", mapping)
+	index, err := bleve.New("../../ku/bleveindex/test4", mapping)
 
 	if err != nil {
 		panic(err)
 	}
 	_ = index.Index(message.Id, message)
-	//index, err := bleve.Open("../../ku/bleve/test")
+	//index, err := bleveindex.Open("../../ku/bleveindex/test")
 	//if err != nil {
 	//	panic(err)
 	//}
@@ -56,6 +57,6 @@ func TestBleveTest(t *testing.T) {
 }
 
 func TestNewBleve(t *testing.T) {
-	//NewBleve("D:\\Project\\she\\ku\\12306\\account.csv", "D:\\Project\\she\\ku\\12306\\bleve")
-	//NewBleveScorch("D:\\Project\\she\\ku\\12306\\account.csv", "D:\\Project\\she\\ku\\12306\\bleve")
+	//NewBleve("D:\\Project\\she\\ku\\12306\\account.csv", "D:\\Project\\she\\ku\\12306\\bleveindex")
+	//NewBleveScorch("D:\\Project\\she\\ku\\12306\\account.csv", "D:\\Project\\she\\ku\\12306\\bleveindex")
 }

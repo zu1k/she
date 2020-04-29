@@ -23,7 +23,7 @@ func OpenBleveIdx(info interface{}) source.Source {
 	path := info.(string)
 	index, err := bleve.Open(path)
 	if err != nil {
-		log.Errorln("Fail to open bleve index file")
+		log.Errorln("Fail to open bleveindex index file")
 		return nil
 	}
 	return &Bleveidx{index: index}

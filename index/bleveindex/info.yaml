@@ -1,0 +1,12 @@
+name: jiudian
+
+columns:
+  - index: 0
+    name: id
+    type: int
+  - index: 1
+    name: name
+    type: string
+  - index: 2
+    name: address
+    type: string
