@@ -17,7 +17,7 @@ func InitSourceList() {
 	//sourceList = append(sourceList, source.NewSource("qqgroup", "sqlserver://she:she@192.168.254.145:1433?database=QQGroup"))
 	sourceList = append(sourceList, source.NewSource("plaintext", "./ku/12306/account.csv"))
 
-	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1-200W.csv"))
+	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1-200W.csv"))
 	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\200W-400W.csv"))
 	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\400W-600W.csv"))
 	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\600W-800W.csv"))
@@ -28,7 +28,7 @@ func InitSourceList() {
 	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1600W-1800W.csv"))
 	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\1800W-2000W.csv"))
 	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\最后5000.csv"))
-	sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\account.csv"))
+	//sourceList = append(sourceList, source.NewSource("bleveidx", "D:\\sheku\\account.csv"))
 
 }
 

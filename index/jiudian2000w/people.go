@@ -6,18 +6,22 @@ import (
 )
 
 type People struct {
-	Name     string
-	CtfId    string
-	Gender   string
-	Birthday string
-	Address  string
-	Mobile   string
+	Name     string `json:"name"`
+	CtfId    string `json:"ctf_id"`
+	Gender   string `json:"gender"`
+	Birthday string `json:"birthday"`
+	Address  string `json:"address"`
+	Mobile   string `json:"mobile"`
 	//Tel       string
-	Email string
+	Email string `json:"email"`
 	//Nation    string
 	//Education string
 	//Company   string
 	//Version   string
+}
+
+func (p *People) Type() string {
+	return "people"
 }
 
 func parsePeopleInfo(record []string) (people People, err error) {

@@ -9,14 +9,60 @@ import (
 	"strings"
 	"time"
 
-	"github.com/zu1k/she/source/bleveidx"
-
-	"github.com/zu1k/she/index/tools"
-
-	"github.com/cheggaaa/pb/v3"
-
 	"github.com/blevesearch/bleve"
+	"github.com/cheggaaa/pb/v3"
+	"github.com/zu1k/she/index/tools"
 )
+
+func newBleveIndex(blevepath string) (index bleve.Index, err error) {
+	mapping := bleve.NewIndexMapping()
+	//==========use seg==============
+	err = mapping.AddCustomTokenizer("sego",
+		map[string]interface{}{
+			"dictpath": "C:\\Users\\zu1k\\go\\pkg\\mod\\github.com\\huichen\\sego@v0.0.0-20180617034105-3f3c8a8cfacc\\data\\dictionary.txt",
+			"type":     "sego",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	err = mapping.AddCustomAnalyzer("sego",
+		map[string]interface{}{
+			"type":      "sego",
+			"tokenizer": "sego",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	mapping.DefaultAnalyzer = "sego"
+	//==========use seg==============
+
+	doc := bleve.NewDocumentMapping()
+
+	docName := bleve.NewTextFieldMapping()
+	docCtfid := bleve.NewTextFieldMapping()
+	docGender := bleve.NewTextFieldMapping()
+	docBirthday := bleve.NewTextFieldMapping()
+	docAddress := bleve.NewTextFieldMapping()
+	docEmail := bleve.NewTextFieldMapping()
+	docMobile := bleve.NewTextFieldMapping()
+
+	doc.AddFieldMappingsAt("name", docName)
+	doc.AddFieldMappingsAt("ctfid", docCtfid)
+	doc.AddFieldMappingsAt("gender", docGender)
+	doc.AddFieldMappingsAt("birthday", docBirthday)
+	doc.AddFieldMappingsAt("address", docAddress)
+	doc.AddFieldMappingsAt("email", docEmail)
+	doc.AddFieldMappingsAt("mobile", docMobile)
+
+	mapping.AddDocumentMapping("people", doc)
+	index, err = bleve.NewUsing(blevepath, mapping, "scorch", "scorch", map[string]interface{}{
+		"forceSegmentType":    "zap",
+		"forceSegmentVersion": 12,
+	})
+	return
+}
 
 func ParseAndIndex(filepath string) {
 	reader, err := tools.OpenCSC(filepath)
@@ -38,7 +84,7 @@ func ParseAndIndex(filepath string) {
 
 	storePath := "D:\\sheku\\" + fileName
 	os.RemoveAll(storePath)
-	indexer, err := bleveidx.NewBleveIndex(storePath, 2)
+	indexer, err := newBleveIndex(storePath)
 	if err != nil {
 		panic(err)
 	}
