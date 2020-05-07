@@ -12,16 +12,20 @@ import (
 )
 
 type plaintext struct {
+	name     string
 	filePath string
 }
 
 func init() {
-	source.Register("plaintext", newPlain)
+	source.Register(source.PlainText, newPlain)
 }
 
-// GetName return plaintext name
-func (p *plaintext) GetName() string {
-	return "PlainText"
+func (p *plaintext) Name() string {
+	return p.name
+}
+
+func (p *plaintext) Type() source.Type {
+	return source.PlainText
 }
 
 // Search return result slice from source plaintext
@@ -53,12 +57,12 @@ func (p *plaintext) Search(key interface{}, resChan chan common.Result, wg *sync
 	wg.Done()
 }
 
-func newPlain(info interface{}) source.Source {
+func newPlain(name string, info interface{}) source.Source {
 	path := info.(string)
 	f, err := os.Open(path)
 	if err != nil {
 		return nil
 	}
 	defer f.Close()
-	return &plaintext{filePath: path}
+	return &plaintext{filePath: path, name: name}
 }

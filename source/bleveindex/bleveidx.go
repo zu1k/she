@@ -1,4 +1,4 @@
-package bleveidx
+package bleveindex
 
 import (
 	"fmt"
@@ -13,31 +13,35 @@ import (
 
 type Bleveidx struct {
 	index bleve.Index
+	name  string
 }
 
 func init() {
-	source.Register("bleveidx", OpenBleveIdx)
+	source.Register(source.BleveIndex, OpenBleveIdx)
 }
 
-func OpenBleveIdx(info interface{}) source.Source {
+func OpenBleveIdx(name string, info interface{}) source.Source {
 	path := info.(string)
 	index, err := bleve.Open(path)
 	if err != nil {
 		log.Errorln("Fail to open bleveindex index file")
 		return nil
 	}
-	return &Bleveidx{index: index}
+	return &Bleveidx{index: index, name: name}
 }
 
-// GetName return Bleveidx name
-func (b *Bleveidx) GetName() string {
-	return "BleveIdx"
+func (b *Bleveidx) Name() string {
+	return b.name
+}
+
+func (b *Bleveidx) Type() source.Type {
+	return source.BleveIndex
 }
 
 // Search return result slice from source Bleveidx
 func (b *Bleveidx) Search(key interface{}, resChan chan common.Result, wg *sync.WaitGroup) {
 	str := key.(string)
-	log.Infoln("Search BleveIdx, key = %s", key)
+	log.Infoln("Search bleve index, key = %s", key)
 	query := bleve.NewMatchQuery(str)
 	searchRequest := bleve.NewSearchRequest(query)
 	searchRequest.Fields = []string{"*"}
@@ -45,11 +49,10 @@ func (b *Bleveidx) Search(key interface{}, resChan chan common.Result, wg *sync.
 	if err != nil {
 		return
 	}
-	//TODO 查找到索引后找真实数据
 	hits := searchResults.Hits
 	for _, i := range hits {
 		result := common.Result{
-			Source: b.GetName(),
+			Source: "bleve",
 			Score:  1,
 			Hit:    str,
 			Text:   fmt.Sprintln(i.Fields),

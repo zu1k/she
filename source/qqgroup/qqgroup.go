@@ -15,14 +15,15 @@ import (
 )
 
 type qqGroup struct {
-	db *gorm.DB
+	name string
+	db   *gorm.DB
 }
 
 func init() {
-	source.Register("qqgroup", newQQGroup)
+	source.Register(source.QQGroup, newQQGroup)
 }
 
-func newQQGroup(info interface{}) source.Source {
+func newQQGroup(name string, info interface{}) source.Source {
 	link := info.(string)
 	if !strings.Contains(link, "dial+timeout=") {
 		if strings.Contains(link, "?") {
@@ -37,12 +38,15 @@ func newQQGroup(info interface{}) source.Source {
 		log.Errorln("QQGroup db connect err")
 		return nil
 	}
-	return &qqGroup{db: db}
+	return &qqGroup{db: db, name: name}
 }
 
-// GetName return qqgroup name
-func (q *qqGroup) GetName() string {
-	return "QQGroup"
+func (q *qqGroup) Name() string {
+	return q.name
+}
+
+func (q *qqGroup) Type() source.Type {
+	return source.QQGroup
 }
 
 // Search return result slice from source QQGroup
@@ -101,7 +105,7 @@ func (q *qqGroup) searchMemberByQQNum(qqNum int, resChan chan common.Result, don
 	q.db.Where("QQNum=?", qqNum).Find(&memberRes)
 	for _, m := range memberRes {
 		result := common.Result{
-			Source: "QQGroup",
+			Source: q.name + ":MemberByQQNum",
 			Score:  1,
 			Hit:    strconv.Itoa(qqNum),
 			Text:   m.String(),
@@ -116,7 +120,7 @@ func (q *qqGroup) searchMemberByGroupNum(groupNum int, resChan chan common.Resul
 	q.db.Where("GroupNum=?", groupNum).Find(&memberRes)
 	for _, m := range memberRes {
 		result := common.Result{
-			Source: "QQGroup",
+			Source: q.name + ":MemberByGroupNum",
 			Score:  1,
 			Hit:    strconv.Itoa(groupNum),
 			Text:   m.String(),
@@ -131,7 +135,7 @@ func (q *qqGroup) searchGroupByGroupNum(groupNum int, resChan chan common.Result
 	q.db.Where("GroupNum=?", groupNum).Find(&groupRes)
 	for _, m := range groupRes {
 		result := common.Result{
-			Source: "QQGroup",
+			Source: q.name + ":GroupByGroupNum",
 			Score:  1,
 			Hit:    strconv.Itoa(groupNum),
 			Text:   m.String(),

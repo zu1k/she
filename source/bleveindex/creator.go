@@ -1,4 +1,4 @@
-package bleveidx
+package bleveindex
 
 import (
 	"bufio"

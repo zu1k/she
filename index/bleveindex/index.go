@@ -8,10 +8,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/zu1k/she/source"
+
+	"github.com/zu1k/she/persistence"
+
 	"github.com/blevesearch/bleve"
 	"github.com/cheggaaa/pb/v3"
 	"github.com/zu1k/she/index/tools"
-	"github.com/zu1k/she/source/bleveidx"
+	"github.com/zu1k/she/source/bleveindex"
 )
 
 func ParseAndIndex(filepath, infoFilePath string) {
@@ -29,13 +33,14 @@ func ParseAndIndex(filepath, infoFilePath string) {
 
 	storePath := "D:\\sheku\\" + fileName
 	_ = os.RemoveAll(storePath)
-	indexer, err := bleveidx.NewBleveIndex(storePath, 2)
+	indexer, err := bleveindex.NewBleveIndex(storePath, 2)
 	if err != nil {
 		panic(err)
 	}
 
 	go Parse(filepath, infoFilePath, entityChan)
 	indexProcessor(indexer, entityChan, lineNum)
+	_ = persistence.NewSource(fileName, source.BleveIndex, storePath)
 }
 
 func indexProcessor(index bleve.Index, entityChan chan Entity, lineCount int) {

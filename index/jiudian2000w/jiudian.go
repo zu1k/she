@@ -9,6 +9,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/zu1k/she/persistence"
+	"github.com/zu1k/she/source"
+
 	"github.com/blevesearch/bleve"
 	"github.com/cheggaaa/pb/v3"
 	"github.com/zu1k/she/index/tools"
@@ -110,6 +113,7 @@ func ParseAndIndex(filepath string) {
 	}()
 
 	indexProcessor(indexer, infoChan, lineNum)
+	_ = persistence.NewSource(fileName, source.BleveIndex, storePath)
 }
 
 func indexProcessor(index bleve.Index, infoChan chan People, lineCount int) {

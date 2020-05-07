@@ -24,7 +24,7 @@ var (
 			}
 			filePath := args[0]
 			switch *indexEngineType {
-			case "bleveindex":
+			case "csv":
 				if info := *infoFilePath; info == "" {
 					fmt.Println("specific info file path")
 				} else {
