@@ -18,7 +18,8 @@
 
 ## Features
 
-- NOT WRITE
+- 根据定义文件自动对csv数据构建索引
+- 快速并行的在多个数据源中进行查询
 
 
 ## Source
