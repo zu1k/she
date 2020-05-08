@@ -39,8 +39,3 @@ $ go get -u -v github.com/zu1k/she
 ```
 
 Pre-built binaries are available here: [release](https://github.com/zu1k/she/releases)
-
-
-## License
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fzu1k%2Fshe.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fzu1k%2Fshe?ref=badge_large)
