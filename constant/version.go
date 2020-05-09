@@ -1,6 +1,6 @@
 package constant
 
-const Name = "She"
+const Name = "she"
 
 var (
 	Version   = "unknown version"
