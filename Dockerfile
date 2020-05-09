@@ -14,5 +14,5 @@ FROM alpine:latest
 
 COPY --from=builder /she /
 COPY --from=builder /she-src/source/bleveindex/dict/dictionary.txt /
-COPY --from=builder /dist /
+COPY --from=builder /dist /dist
 ENTRYPOINT ["/she"]
