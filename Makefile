@@ -37,8 +37,8 @@ $(gz_releases): %.gz : %
 	gzip -f -S -$(VERSION).gz $(BINDIR)/$(NAME)-$(basename $@)
 
 $(zip_releases): %.zip : %
-    cp source/bleveindex/dict/dictionary.txt $(BINDIR)/dictionary.txt
-    zip -m -j $(BINDIR)/$(NAME)-$(basename $@)-$(VERSION).zip $(BINDIR)/$(NAME)-$(basename $@).exe
+	cp source/bleveindex/dict/dictionary.txt $(BINDIR)/dictionary.txt
+	zip -m -j $(BINDIR)/$(NAME)-$(basename $@)-$(VERSION).zip $(BINDIR)/$(NAME)-$(basename $@).exe
 
 all-arch: $(PLATFORM_LIST) $(WINDOWS_ARCH_LIST)
 
