@@ -52,3 +52,5 @@ Pre-built binaries are available here: [release](https://github.com/zu1k/she/rel
 docker pull zu1k/she
 docker run -itd -p 80:10086 -v /path/to/she/data:/root/she zu1k/she serve -m auto
 ```
+
+然后将你的各种文本库扔 /path/to/she/data/origin 目录下，然后等待索引就行了
