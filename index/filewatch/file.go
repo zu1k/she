@@ -23,6 +23,7 @@ func DoWatch() {
 	w := Watch{
 		watch: watch,
 	}
+	fmt.Println("File watcher:", C.Path.OriginDir())
 	w.watchDir(C.Path.OriginDir())
 	select {}
 }

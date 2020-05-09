@@ -25,6 +25,7 @@ var (
 			log.Infoln("Success init source list")
 			switch *mode {
 			case "auto":
+				fmt.Println("auto mode")
 				go filewatch.DoWatch()
 				hub.Start(*bindAddr, *secret)
 			case "manual":
