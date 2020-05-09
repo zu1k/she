@@ -1,6 +1,6 @@
 FROM golang:alpine as builder
 
-RUN apk add --no-cache make git
+RUN apk add --no-cache make git gcc
 WORKDIR /she-src
 COPY . /she-src
 RUN go mod download && \
@@ -9,6 +9,5 @@ RUN go mod download && \
 
 FROM alpine:latest
 
-RUN apk add --no-cache ca-certificates
 COPY --from=builder /she /
 ENTRYPOINT ["/she"]

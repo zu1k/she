@@ -38,4 +38,6 @@ she Requires Go >= 1.13. You can build it from source:
 $ go get -u -v github.com/zu1k/she
 ```
 
+Download dictionary.txt to the same dir with she
+
 Pre-built binaries are available here: [release](https://github.com/zu1k/she/releases)
