@@ -4,25 +4,23 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
-	"runtime"
-	"strings"
+	"path/filepath"
 	"time"
 
+	C "github.com/zu1k/she/constant"
 	"github.com/zu1k/she/persistence"
 	"github.com/zu1k/she/source"
 
 	"github.com/blevesearch/bleve"
 	"github.com/cheggaaa/pb/v3"
-	"github.com/zu1k/she/index/tools"
+	"github.com/zu1k/she/common/tools"
 )
 
 func newBleveIndex(blevepath string) (index bleve.Index, err error) {
 	mapping := bleve.NewIndexMapping()
-	//==========use seg==============
 	err = mapping.AddCustomTokenizer("sego",
 		map[string]interface{}{
-			"dictpath": "C:\\Users\\zu1k\\go\\pkg\\mod\\github.com\\huichen\\sego@v0.0.0-20180617034105-3f3c8a8cfacc\\data\\dictionary.txt",
+			"dictpath": "dictionary.txt",
 			"type":     "sego",
 		},
 	)
@@ -39,7 +37,6 @@ func newBleveIndex(blevepath string) (index bleve.Index, err error) {
 		panic(err)
 	}
 	mapping.DefaultAnalyzer = "sego"
-	//==========use seg==============
 
 	doc := bleve.NewDocumentMapping()
 
@@ -67,25 +64,22 @@ func newBleveIndex(blevepath string) (index bleve.Index, err error) {
 	return
 }
 
-func ParseAndIndex(filepath string) {
-	reader, err := tools.OpenCSC(filepath)
+func ParseAndIndex(filePath string) {
+	reader, err := tools.OpenCSC(filePath)
 	if err != nil {
 		panic(err)
 	}
 
-	lineNum, err := tools.LineCounter(filepath)
+	lineNum, err := tools.LineCounter(filePath)
 	if err != nil {
 		panic(err)
 	}
 
 	infoChan := make(chan People, 1000)
-	fileName := path.Base(filepath)
-	if runtime.GOOS == "windows" {
-		filepaths := strings.Split(filepath, "\\")
-		fileName = filepaths[len(filepaths)-1]
-	}
+	fileName := tools.Path2Name(filePath)
 
-	storePath := "D:\\sheku\\" + fileName
+	storePath := filepath.Join(C.Path.IndexDir(), fileName)
+
 	os.RemoveAll(storePath)
 	indexer, err := newBleveIndex(storePath)
 	if err != nil {
@@ -113,7 +107,7 @@ func ParseAndIndex(filepath string) {
 	}()
 
 	indexProcessor(indexer, infoChan, lineNum)
-	_ = persistence.NewSource(fileName, source.BleveIndex, storePath)
+	_ = persistence.NewSource(fileName, source.BleveIndex, storePath, filePath)
 }
 
 func indexProcessor(index bleve.Index, infoChan chan People, lineCount int) {

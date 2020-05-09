@@ -5,25 +5,26 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
-	"runtime"
-	"strings"
+	"path/filepath"
 	"time"
 
 	"github.com/zu1k/she/persistence"
+
+	"github.com/zu1k/she/processor"
+
+	C "github.com/zu1k/she/constant"
 	"github.com/zu1k/she/source"
 
 	"github.com/blevesearch/bleve"
 	"github.com/cheggaaa/pb/v3"
-	"github.com/zu1k/she/index/tools"
+	"github.com/zu1k/she/common/tools"
 )
 
 func newBleveIndex(blevepath string) (index bleve.Index, err error) {
 	mapping := bleve.NewIndexMapping()
-	//==========use seg==============
 	err = mapping.AddCustomTokenizer("sego",
 		map[string]interface{}{
-			"dictpath": "C:\\Users\\zu1k\\go\\pkg\\mod\\github.com\\huichen\\sego@v0.0.0-20180617034105-3f3c8a8cfacc\\data\\dictionary.txt",
+			"dictpath": "dictionary.txt",
 			"type":     "sego",
 		},
 	)
@@ -40,8 +41,6 @@ func newBleveIndex(blevepath string) (index bleve.Index, err error) {
 		panic(err)
 	}
 	mapping.DefaultAnalyzer = "sego"
-	//==========use seg==============
-
 	index, err = bleve.NewUsing(blevepath, mapping, "scorch", "scorch", map[string]interface{}{
 		"forceSegmentType":    "zap",
 		"forceSegmentVersion": 12,
@@ -49,14 +48,19 @@ func newBleveIndex(blevepath string) (index bleve.Index, err error) {
 	return
 }
 
-func ParseAndIndex(filepath string) {
-	fi, err := os.Open(filepath)
+func ParseAndIndex(filePath string) {
+	fi, err := os.Open(filePath)
 	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
+		for {
+			time.Sleep(time.Second)
+			fi, err = os.Open(filePath)
+			if err == nil {
+				break
+			}
+		}
 	}
 
-	lineNum, err := tools.LineCounter(filepath)
+	lineNum, err := tools.LineCounter(filePath)
 	if err != nil {
 		panic(err)
 	}
@@ -64,13 +68,11 @@ func ParseAndIndex(filepath string) {
 	br := bufio.NewReader(fi)
 
 	infoChan := make(chan string, 1000)
-	fileName := path.Base(filepath)
-	if runtime.GOOS == "windows" {
-		filepaths := strings.Split(filepath, "\\")
-		fileName = filepaths[len(filepaths)-1]
-	}
+	fileName := tools.Path2Name(filePath)
+	dirPath := tools.Path2Path(filePath)
+	storePath := filepath.Join(C.Path.IndexDir(), dirPath, fileName)
+	fmt.Println("index store path", storePath, dirPath)
 
-	storePath := "D:\\sheku\\" + fileName
 	os.RemoveAll(storePath)
 	indexer, err := newBleveIndex(storePath)
 	if err != nil {
@@ -89,7 +91,8 @@ func ParseAndIndex(filepath string) {
 	}()
 
 	indexProcessor(indexer, infoChan, lineNum)
-	_ = persistence.NewSource(fileName, source.BleveIndex, storePath)
+	processor.AddSource(fileName, source.BleveIndex, storePath)
+	_ = persistence.NewSource(fileName, source.BleveIndex, storePath, filePath)
 }
 
 func indexProcessor(index bleve.Index, infoChan chan string, lineCount int) {
@@ -119,6 +122,7 @@ func indexProcessor(index bleve.Index, infoChan chan string, lineCount int) {
 	if i > 0 {
 		_ = index.Batch(batch)
 	}
+	index.Close()
 	time.Sleep(time.Second)
 	bar.Finish()
 	fmt.Printf("finish: %d valid rows indexed\n", linenum)

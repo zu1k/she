@@ -3,44 +3,39 @@ package bleveindex
 import (
 	"fmt"
 	"os"
-	"path"
-	"runtime"
-	"strings"
+	"path/filepath"
 	"time"
-
-	"github.com/zu1k/she/source"
-
-	"github.com/zu1k/she/persistence"
 
 	"github.com/blevesearch/bleve"
 	"github.com/cheggaaa/pb/v3"
-	"github.com/zu1k/she/index/tools"
+	"github.com/zu1k/she/common/tools"
+	C "github.com/zu1k/she/constant"
+	"github.com/zu1k/she/persistence"
+	"github.com/zu1k/she/source"
 	"github.com/zu1k/she/source/bleveindex"
 )
 
-func ParseAndIndex(filepath, infoFilePath string) {
-	lineNum, err := tools.LineCounter(filepath)
+func ParseAndIndex(filePath, infoFilePath string) {
+	lineNum, err := tools.LineCounter(filePath)
 	if err != nil {
 		panic(err)
 	}
 
 	entityChan := make(chan Entity, 1000)
-	fileName := path.Base(filepath)
-	if runtime.GOOS == "windows" {
-		filepaths := strings.Split(filepath, "\\")
-		fileName = filepaths[len(filepaths)-1]
-	}
 
-	storePath := "D:\\sheku\\" + fileName
+	fileName := tools.Path2Name(filePath)
+
+	storePath := filepath.Join(C.Path.IndexDir(), fileName)
+
 	_ = os.RemoveAll(storePath)
 	indexer, err := bleveindex.NewBleveIndex(storePath, 2)
 	if err != nil {
 		panic(err)
 	}
 
-	go Parse(filepath, infoFilePath, entityChan)
+	go Parse(filePath, infoFilePath, entityChan)
 	indexProcessor(indexer, entityChan, lineNum)
-	_ = persistence.NewSource(fileName, source.BleveIndex, storePath)
+	_ = persistence.NewSource(fileName, source.BleveIndex, storePath, filePath)
 }
 
 func indexProcessor(index bleve.Index, entityChan chan Entity, lineCount int) {

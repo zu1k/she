@@ -1,18 +1,21 @@
 package processor
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"sync"
 
-	"github.com/zu1k/she/persistence"
-
-	"github.com/zu1k/she/source"
-
 	"github.com/zu1k/she/common"
+	"github.com/zu1k/she/persistence"
+	"github.com/zu1k/she/source"
 )
 
 var sourceList = make([]source.Source, 0)
+
+func AddSource(name string, p source.Type, src string) {
+	sourceList = append(sourceList, source.NewSource(name, p, src))
+}
 
 // InitSourceList 初始化搜索资源的列表
 func InitSourceList() {
@@ -28,7 +31,6 @@ func ReadSourceFromDB() []source.Source {
 	var sourceList = make([]source.Source, 0)
 	for _, asource := range dbsources {
 		sourceList = append(sourceList, source.NewSource(asource.Name, asource.Type, asource.Src))
-
 	}
 	return sourceList
 }
@@ -37,6 +39,7 @@ func ReadSourceFromDB() []source.Source {
 func SearchAllSource(key string) (results []common.Result) {
 	wg := &sync.WaitGroup{}
 	resChan := make(chan common.Result, 30)
+	fmt.Println("len", len(sourceList))
 	for _, s := range sourceList {
 		if s == nil {
 			continue

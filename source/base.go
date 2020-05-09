@@ -1,6 +1,7 @@
 package source
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/zu1k/she/common"
@@ -25,6 +26,7 @@ func Register(sourceType Type, c creator) {
 
 // NewSource create an Source object by name and return as an Source interface
 func NewSource(name string, stype Type, info interface{}) Source {
+	fmt.Println(name, stype, info)
 	c, ok := creatorMap[stype]
 	if ok {
 		log.Infoln("Init bleve index source:  %s", name)

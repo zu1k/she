@@ -12,16 +12,18 @@ import (
 // Source
 type Source struct {
 	gorm.Model
-	Name string
-	Type source.Type
-	Src  string
+	Name       string
+	Type       source.Type
+	Src        string
+	OriginFile string
 }
 
-func NewSource(name string, sourceType source.Type, src string) (err error) {
+func NewSource(name string, sourceType source.Type, src string, origin string) (err error) {
 	source := Source{
-		Name: name,
-		Type: sourceType,
-		Src:  src,
+		Name:       name,
+		Type:       sourceType,
+		Src:        src,
+		OriginFile: origin,
 	}
 	if db.NewRecord(source) {
 		db.Create(&source)
@@ -40,7 +42,7 @@ func FetchAllSource() (sources []Source, err error) {
 }
 
 func GetSourceSByName(name string) (sources []Source, err error) {
-	db.Where("name LIKE %?%", name).Find(&sources)
+	db.Where("name LIKE ?", name).Find(&sources)
 	if len(sources) == 0 {
 		return nil, errors.New(fmt.Sprintln("no source found, search by name: ", name))
 	}

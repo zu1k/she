@@ -6,6 +6,8 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path"
+	"runtime"
 	"strings"
 )
 
@@ -52,4 +54,28 @@ func LineCounter(filepath string) (int, error) {
 	}
 
 	return count, err
+}
+
+func Path2Name(filePath string) string {
+	fileName := path.Base(filePath)
+	if runtime.GOOS == "windows" {
+		filepaths := strings.Split(filePath, "\\")
+		fileName = filepaths[len(filepaths)-1]
+	}
+	return fileName
+}
+
+func Path2Path(filePath string) string {
+	dirpath := ""
+
+	if runtime.GOOS == "windows" {
+		filepaths := strings.Split(filePath, ":\\")
+		dirpath = filepaths[1]
+	} else {
+		dirpath := path.Dir(filePath)
+		if dirpath == "." {
+			return ""
+		}
+	}
+	return dirpath
 }

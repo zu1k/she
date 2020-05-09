@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
-
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/zu1k/she/constant"
 )
 
-var cfgFile string
+var (
+	cfgFile  string
+	homePath string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -32,8 +35,10 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(initHomePath)
+	//cobra.OnInitialize(initConfig)
 
+	rootCmd.PersistentFlags().StringVar(&homePath, "path", "", "home dir path")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.she.yaml)")
 }
 
@@ -60,5 +65,11 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
+}
+
+func initHomePath() {
+	if homePath != "" {
+		constant.SetHomeDir(homePath)
 	}
 }

@@ -3,8 +3,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
+	"github.com/zu1k/she/index/filewatch"
+
 	"github.com/zu1k/she/hub"
+
+	"github.com/spf13/cobra"
 	"github.com/zu1k/she/log"
 	"github.com/zu1k/she/processor"
 )
@@ -20,15 +23,23 @@ var (
 			log.Infoln("Init source list...")
 			processor.InitSourceList()
 			log.Infoln("Success init source list")
-			hub.Start(*bindAddr, *secret)
+			switch *mode {
+			case "auto":
+				go filewatch.DoWatch()
+				hub.Start(*bindAddr, *secret)
+			case "manual":
+				hub.Start(*bindAddr, *secret)
+			}
 		},
 	}
 	bindAddr *string
 	secret   *string
+	mode     *string
 )
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
 	bindAddr = serveCmd.Flags().StringP("bind", "b", ":10086", "web api bind address")
 	secret = serveCmd.Flags().StringP("secret", "s", "", "web api access secret")
+	mode = serveCmd.Flags().StringP("mode", "m", "manual", "serve mode (manual、auto)")
 }

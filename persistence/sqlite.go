@@ -1,17 +1,21 @@
 package persistence
 
 import (
+	"path/filepath"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // init for sqlite
+	"github.com/zu1k/she/constant"
 )
 
 var db *gorm.DB
 
 func init() {
 	var err error
-	db, err = gorm.Open("sqlite3", "data.db")
+	dbpath := filepath.Join(constant.Path.HomeDir(), "data.db")
+	db, err = gorm.Open("sqlite3", dbpath)
 	if err != nil {
-		panic("persistent db init error")
+		panic(err)
 	}
 	db.AutoMigrate(&Source{})
 }

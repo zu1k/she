@@ -11,6 +11,8 @@ var Path *path
 
 type path struct {
 	homeDir    string
+	indexDir   string
+	originDir  string
 	configFile string
 }
 
@@ -20,8 +22,25 @@ func init() {
 		homeDir, _ = os.Getwd()
 	}
 
-	homeDir = P.Join(homeDir, ".config", Name)
+	homeDir = P.Join(homeDir, Name)
 	Path = &path{homeDir: homeDir, configFile: "config.yaml"}
+	_, err = os.Stat(homeDir)
+	if err != nil {
+		err := os.Mkdir(homeDir, os.ModePerm)
+		if err != nil {
+			Path.homeDir = ""
+		}
+	}
+	Path.originDir = filepath.Join(homeDir, "origin")
+	_, err = os.Stat(Path.originDir)
+	if err != nil {
+		_ = os.Mkdir(Path.originDir, os.ModePerm)
+	}
+	Path.indexDir = filepath.Join(homeDir, "index")
+	_, err = os.Stat(Path.indexDir)
+	if err != nil {
+		_ = os.Mkdir(Path.indexDir, os.ModePerm)
+	}
 }
 
 // SetHomeDir is used to set the configuration path
@@ -36,6 +55,14 @@ func SetConfig(file string) {
 
 func (p *path) HomeDir() string {
 	return p.homeDir
+}
+
+func (p *path) IndexDir() string {
+	return p.indexDir
+}
+
+func (p *path) OriginDir() string {
+	return p.originDir
 }
 
 func (p *path) Config() string {

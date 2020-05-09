@@ -3,7 +3,7 @@ package bleveindex
 import (
 	"io"
 
-	"github.com/zu1k/she/index/tools"
+	"github.com/zu1k/she/common/tools"
 )
 
 type Entity map[string]interface{}
