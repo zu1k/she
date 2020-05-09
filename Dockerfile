@@ -10,4 +10,5 @@ RUN go mod download && \
 FROM alpine:latest
 
 COPY --from=builder /she /
+COPY --from=builder /she-src/source/bleveindex/dict/dictionary.txt /
 ENTRYPOINT ["/she"]
