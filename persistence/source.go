@@ -50,3 +50,7 @@ func GetSourceSByName(name string) (sources []Source, err error) {
 func DeleteSourceByName(name string) (err error) {
 	return
 }
+
+func DeleteAllSource() {
+	db.Delete(&Source{})
+}

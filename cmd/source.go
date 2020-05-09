@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/zu1k/she/persistence"
+
 	"github.com/spf13/cobra"
 )
 
@@ -13,6 +15,23 @@ var sourceCmd = &cobra.Command{
 	Long:  `manage all the she sources.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("source called")
+	},
+}
+
+var sourceListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "list source",
+	Long:  `list source.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		sources, err := persistence.FetchAllSource()
+		if err != nil {
+
+		}
+		fmt.Printf("Name\t\tType\t\tSource\n")
+		for _, source := range sources {
+			fmt.Printf("%s\t%s\t%s\n", source.Name, source.Type.String(), source.Src)
+		}
+		fmt.Printf("\nTotal: %d\n", len(sources))
 	},
 }
 
@@ -34,7 +53,12 @@ var sourceDelCmd = &cobra.Command{
 	Short: "delete source",
 	Long:  `delete source.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("source delete called")
+		if *all {
+			persistence.DeleteAllSource()
+			fmt.Println("all the sources has been deleted")
+		} else {
+			fmt.Println("NONE the sources has been deleted")
+		}
 	},
 }
 
@@ -46,5 +70,6 @@ func init() {
 	rootCmd.AddCommand(sourceCmd)
 	sourceCmd.AddCommand(sourceAddCmd)
 	sourceCmd.AddCommand(sourceDelCmd)
-	all = sourceDelCmd.Flags().BoolP("all", "a", false, "delete ALL the sources")
+	sourceCmd.AddCommand(sourceListCmd)
+	all = sourceDelCmd.Flags().BoolP("all", "a", false, "manage ALL the sources")
 }

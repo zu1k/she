@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/zu1k/she/index/fullline"
+
 	"github.com/zu1k/she/index/bleveindex"
 
 	"github.com/zu1k/she/index/jiudian2000w"
@@ -33,6 +35,8 @@ var (
 				return
 			case "jiudian2000w":
 				jiudian2000w.ParseAndIndex(filePath)
+			case "line":
+				fullline.ParseAndIndex(filePath)
 			}
 		},
 	}
@@ -43,6 +47,6 @@ var (
 func init() {
 	rootCmd.AddCommand(indexCmd)
 
-	indexEngineType = indexCmd.Flags().StringP("type", "t", "bleveindex", "which index engine to use")
+	indexEngineType = indexCmd.Flags().StringP("type", "t", "line", "which index engine to use")
 	infoFilePath = indexCmd.Flags().StringP("info", "i", "", "info file to use")
 }
