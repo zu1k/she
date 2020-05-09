@@ -41,3 +41,14 @@ $ go get -u -v github.com/zu1k/she
 Download dictionary.txt to the same dir with she
 
 Pre-built binaries are available here: [release](https://github.com/zu1k/she/releases)
+
+## Use
+
+### Docker
+
+使用预编译的Docker镜像
+
+```sh
+docker pull zu1k/she
+docker run -itd -p 80:10086 -v /root/she:/root/She zu1k/she serve -m auto
+```
