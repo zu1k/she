@@ -1,6 +1,6 @@
 FROM golang:alpine as builder
 
-RUN apk add --no-cache make git gcc g++
+RUN apk add --no-cache git build-base
 WORKDIR /she-src
 COPY . /she-src
 RUN go mod download && \
