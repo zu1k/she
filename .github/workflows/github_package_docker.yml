@@ -22,6 +22,7 @@ jobs:
           username: zu1k
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: she
+          repository: zu1k/she
+          tag_with_ref: true
         
         
