@@ -13,12 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v1.1.0
-      with:
-        username: zu1k
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
-        repository: she
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: zu1k
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: she
         
         
