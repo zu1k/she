@@ -3,13 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/zu1k/she/index/fullline"
-
-	"github.com/zu1k/she/index/bleveindex"
-
-	"github.com/zu1k/she/index/jiudian2000w"
-
 	"github.com/spf13/cobra"
+	"github.com/zu1k/she/pkg/index/bleveindex"
+	"github.com/zu1k/she/pkg/index/fullline"
+	"github.com/zu1k/she/pkg/index/jiudian2000w"
 )
 
 // indexCmd represents the index command

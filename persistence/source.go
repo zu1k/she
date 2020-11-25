@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/zu1k/she/source"
+	"github.com/zu1k/she/pkg/source"
 
 	"github.com/jinzhu/gorm"
 )

@@ -14,7 +14,15 @@ var sourceCmd = &cobra.Command{
 	Short: "manage sources",
 	Long:  `manage all the she sources.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("source called")
+		sources, err := persistence.FetchAllSource()
+		if err != nil {
+
+		}
+		fmt.Printf("Name\t\tType\t\tSource\n")
+		for _, source := range sources {
+			fmt.Printf("%s\t%s\t%s\n", source.Name, source.Type.String(), source.Src)
+		}
+		fmt.Printf("\nTotal: %d\n", len(sources))
 	},
 }
 
@@ -40,11 +48,7 @@ var sourceAddCmd = &cobra.Command{
 	Short: "add source",
 	Long:  `add source.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			fmt.Println("？")
-		} else {
-			fmt.Println("source add called", args[0])
-		}
+		fmt.Println("暂未实现")
 	},
 }
 

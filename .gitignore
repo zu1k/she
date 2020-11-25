@@ -21,8 +21,6 @@ vendor
 # macOS file
 .DS_Store
 
-*.exe
-
 # ku
 ku/*
 dist/*
